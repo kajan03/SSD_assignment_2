@@ -10,7 +10,7 @@ import { PrimaryTheme } from './theme/theme';
 export default function App() {
   return (
     <ThemeProvider theme={PrimaryTheme}>
-++      <AppRoutes />
+      <AppRoutes />
     </ThemeProvider>
   );
 }
