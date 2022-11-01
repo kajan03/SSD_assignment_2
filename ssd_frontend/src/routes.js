@@ -9,6 +9,7 @@ import AddMessageFiles from './pages/addMessageFiles';
 import Dashboard from './pages/Dashboard';
 
 import useToken from "./userToken";
+import SignUp from './pages/signup';
 
 // ----------------------------------------------------------------------
 export default function AppRoutes() {
@@ -30,6 +31,8 @@ export default function AppRoutes() {
             /> } />
             <Route path="/add" element={ <AddMessageFiles/> } />
             <Route path="/dashboard" element={ <Dashboard/> } />
+            <Route path="/signup" element={ <SignUp/> } />
+
             </Routes>
           </Router>
           
