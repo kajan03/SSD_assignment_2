@@ -15,23 +15,23 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 async function getPermission(token) {
 	return new Promise((resolve, reject) => {
-	  fetch("http://localhost:5000/permissions", {
-		method: "GET",
-		headers: {
-		  token: token,
-		},
-	  })
-		.then(async function (response) {
-		  let code = response.status;
-		  let data = await response.json();
-		  resolve({
-			code: code,
-			data: data,
-		  });
+		fetch("http://localhost:5000/permissions", {
+			method: "GET",
+			headers: {
+				token: token,
+			},
 		})
-		.catch((e) => reject(e));
+			.then(async function (response) {
+				let code = response.status;
+				let data = await response.json();
+				resolve({
+					code: code,
+					data: data,
+				});
+			})
+			.catch((e) => reject(e));
 	});
-  }
+}
 
 const AddMessageFiles = () => {
 
@@ -45,24 +45,24 @@ const AddMessageFiles = () => {
 
 	async function fileUpload(credentials) {
 		return new Promise((resolve, reject) => {
-		  fetch("http://localhost:5000/file/file_upload", {
-			method: "POST",
-			headers: {
-				token: token,
-			},
-			body: credentials,
-		  })
-			.then(async function (response) {
-			  let code = response.status;
-			  let data = await response.json();
-			  resolve({
-				code: code,
-				data: data,
-			  });
+			fetch("http://localhost:5000/file/file_upload", {
+				method: "POST",
+				headers: {
+					token: token,
+				},
+				body: credentials,
 			})
-			.catch((e) => reject(e));
+				.then(async function (response) {
+					let code = response.status;
+					let data = await response.json();
+					resolve({
+						code: code,
+						data: data,
+					});
+				})
+				.catch((e) => reject(e));
 		});
-	  }
+	}
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -72,30 +72,34 @@ const AddMessageFiles = () => {
 		formData.append("image", files[0]);
 
 		const response = await fileUpload(formData);
-	
+
 		if (response.code != 200) setStatusMessage(response.data.message);
 		else {
-		//   setToken(response.data.token);
-		  navigate("/", {
-			replace: true,
-		  });
+			//   setToken(response.data.token);
+			navigate("/", {
+				replace: true,
+			});
 		}
-	  };
+	};
 
 	useEffect(() => {
 		async function fetchPermission(token) {
-		  let response = await getPermission(token);
-	
-		  setPermissions(response.data.data);
-		
-		  return response;
+			let response = await getPermission(token);
+
+			setPermissions(response.data.data);
+
+			return response;
 		}
 		fetchPermission(token);
-	  }, []);
+	}, []);
+
+	useEffect(() => {
+		if (!token) navigate("../login", { replace: true });
+	}, [token]);
 
 	return (
 		<div>
-			<Container style={{ backgroundColor: "white",marginTop:"100px" }}>
+			<Container style={{ backgroundColor: "white", marginTop: "100px" }}>
 				<Grid container spacing={3}>
 					<Grid item sm={3}></Grid>
 					<Grid item sm={6}>
@@ -116,15 +120,15 @@ const AddMessageFiles = () => {
 											{
 												permissions.includes("MESSAGE") ?
 
-												<TextField
-												id="outlined-basic"
-												label="Enter Message"
-												variant="outlined"
-												className="inputText"
-												fullWidth
-												size="medium"
-												onChange={(e) => setMessage(e.target.value)}
-												/> : null
+													<TextField
+														id="outlined-basic"
+														label="Enter Message"
+														variant="outlined"
+														className="inputText"
+														fullWidth
+														size="medium"
+														onChange={(e) => setMessage(e.target.value)}
+													/> : null
 
 											}
 
@@ -134,10 +138,10 @@ const AddMessageFiles = () => {
 
 											{
 												permissions.includes("FILEUPLOAD") ?
-												<FileUpload 
-													value={files} 
-													onChange={setFiles}
-												/> : null
+													<FileUpload
+														value={files}
+														onChange={setFiles}
+													/> : null
 											}
 
 										</Grid>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Grid,
 	TextField,
@@ -9,12 +9,12 @@ import {
 	CardHeader,
 	Container,
 	Select,
-    InputLabel,
-    FormControl,
-    MenuItem
+	InputLabel,
+	FormControl,
+	MenuItem
 } from "@material-ui/core";
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import useToken from "../userToken";
 
 const SignUp = () => {
 	const [userName, setUserName] = useState();
@@ -22,6 +22,7 @@ const SignUp = () => {
 	const [role, setRole] = useState();
 	const [statusMessage, setStatusMessage] = useState("");
 	let navigate = useNavigate();
+	const { token, setToken } = useToken();
 
 	async function signUpUser(credentials) {
 		return new Promise((resolve, reject) => {
@@ -45,7 +46,6 @@ const SignUp = () => {
 	}
 
 	const handleSubmit = async (e) => {
-		e.preventDefault();
 
 		const response = await signUpUser({
 			userName: userName,
@@ -56,11 +56,12 @@ const SignUp = () => {
 		setUserName("");
 		setPassword("");
 		setStatusMessage(response.data.message);
+		navigate("/home", { replace: true })
 	};
 
-	const loginHandler = (e) => {
-		navigate("../login", { replace: true });
-	};
+	useEffect(() => {
+		if (!token) navigate("../login", { replace: true });
+	}, [token]);
 
 	return (
 		<div>
@@ -98,6 +99,7 @@ const SignUp = () => {
 												variant="outlined"
 												className="inputText"
 												fullWidth
+												type="password"
 												size="medium"
 												onChange={(e) => setPassword(e.target.value)}
 											/>
@@ -111,13 +113,13 @@ const SignUp = () => {
 													labelId="demo-simple-select-label"
 													id="demo-simple-select"
 													value={role}
-                                                    variant="outlined"
+													variant="outlined"
 													label="Role Type"
 													onChange={(e) => setRole(e.target.value)}
 												>
-													<MenuItem value={"Admin"}>Admin</MenuItem>
-													<MenuItem value={"Manager"}>Manager</MenuItem>
-													<MenuItem value={"Staff"}>Staff</MenuItem>
+													<MenuItem value={"ADMIN"}>Admin</MenuItem>
+													<MenuItem value={"MANAGER"}>Manager</MenuItem>
+													<MenuItem value={"WORKER"}>Workers</MenuItem>
 												</Select>
 											</FormControl>
 										</Grid>
@@ -126,7 +128,7 @@ const SignUp = () => {
 												variant="contained"
 												style={{
 													color: "#ffffff",
-													backgroundColor: "#62A9FF",
+													backgroundColor: "#167cf7",
 													width: "100%",
 													borderRadius: "6px",
 												}}

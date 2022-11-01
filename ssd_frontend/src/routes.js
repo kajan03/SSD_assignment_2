@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 
 import useToken from "./userToken";
 import SignUp from './pages/signup';
+import Home from './pages/home';
 
 // ----------------------------------------------------------------------
 export default function AppRoutes() {
@@ -25,13 +26,14 @@ export default function AppRoutes() {
       <>
           <Router>
             <Routes>
-            <Route path="/" element={ <LoginForm
+            <Route path="/login" element={ <LoginForm
                   setUserPermission={setUserPermission}
                   setToken={setToken}
             /> } />
             <Route path="/add" element={ <AddMessageFiles/> } />
             <Route path="/dashboard" element={ <Dashboard/> } />
             <Route path="/signup" element={ <SignUp/> } />
+            <Route path="/home" element={<Home/>}/>
 
             </Routes>
           </Router>
