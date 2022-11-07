@@ -21,6 +21,14 @@ async function inputData (data) {
     return false;
 }
 
+async function inputMessageData (data) {
+    let query = `insert into data (userId, message, imagePath) values (${data.user},'${data.body.message}','NULL')`;
+    let result = await execute(query);
+
+    if (result.affectedRows > 0) return true;
+    return false;
+}
+
 async function getData (data) {
     let query = `select * from data WHERE userId = ${data.user}`;
     let result = await execute(query);
@@ -104,25 +112,20 @@ const readImages = function (req, res) {
         res.status(200).json(result);
      })
 
-     
+};
 
-    // results.forEach(element => {
-        
-    //     const buffer = getEncryptedFile(path.join("./uploads", element.imagePath), secret.key, secret.iv);
-    //     const readStream = new stream.PassThrough();
-    //     readStream.end(buffer);
-    //     res.writeHead(200, {
-    //         "Content-disposition": "attachment; filename=" + req.params.fileName,
-    //         "Content-Type": "application/octet-stream",
-    //         "Content-Length": buffer.length
-    //     });
-    //     res.end(buffer);
-    // });
+// return response image is uploaded or not
+const messageUpload = function (req, res) {
 
+    const inputValue = inputMessageData(req);
+    console.log("Uploading message:", req.body);
 
+    return res.status(200).json([{ success: 'Successfully uploaded message' }])
+    
 };
 
 exports.thumbUploadMulter = thumbUploadMulter;
 exports.thumbImageUpload = thumbImageUpload;
 exports.readImage = readImage;
 exports.readImages = readImages
+exports.messageUpload = messageUpload;

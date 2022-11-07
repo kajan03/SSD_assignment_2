@@ -74,11 +74,18 @@ const Dashboard = () => {
 			{response2.current != null ?
 				response2.current.data.map((image) => {
 					return (
-						<div key={image.imagePath}>
-							<h2>{image.message}</h2>
-							<Imagepage imageIds={image.imagePath} />
-						</div>
-					)
+						permissions.includes("FILEUPLOAD") ? 
+						(
+							<div key={image.imagePath}>
+								<h2>{image.message}</h2>
+								<Imagepage imageIds={image.imagePath} />
+							</div>) : 
+							(
+								<div key={image.message}>
+									<h2>{image.message}</h2>
+								</div>
+							)
+						)
 				}) : null
 			}
 

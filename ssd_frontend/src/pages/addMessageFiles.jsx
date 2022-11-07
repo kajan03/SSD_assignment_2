@@ -64,18 +64,52 @@ const AddMessageFiles = () => {
 		});
 	}
 
+	async function messageUpload() {
+		return new Promise((resolve, reject) => {
+			fetch("http://localhost:5000/file/message", {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+					token: token,
+				},
+				body: JSON.stringify({
+					message: message,
+				}),
+			})
+				.then(async function (response) {
+					let code = response.status;
+					let data = await response.json();
+					resolve({
+						code: code,
+						data: data,
+					});
+				})
+				.catch((e) => reject(e));
+		});
+	}
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const formData = new FormData();
-		formData.append("message", message);
-		formData.append("image", files[0]);
+		let response = "";
 
-		const response = await fileUpload(formData);
+		if (permissions.includes("FILEUPLOAD")) {
+
+			const formData = new FormData();
+			formData.append("message", message);
+			formData.append("image", files[0]);
+	
+			response = await fileUpload(formData);
+
+		}else {
+
+			response = await messageUpload();
+
+		}
+
 
 		if (response.code != 200) setStatusMessage(response.data.message);
 		else {
-			//   setToken(response.data.token);
 			navigate("/", {
 				replace: true,
 			});
