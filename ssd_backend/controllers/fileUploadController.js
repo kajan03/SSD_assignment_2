@@ -5,6 +5,7 @@ const fs = require("fs");
 const CryptoAlgorithm = "aes-256-cbc";
 const stream = require("stream");
 const execute = require("../utils/queryExecuter");
+const { encrypt, decrypt } = require('../crypto')
 
 const thumbStorage = multer.memoryStorage();
 
@@ -14,7 +15,8 @@ const secret = {
     key: Buffer.from('6245cb9b8dab1c1630bb3283063f963574d612ca6ec60bc8a5d1e07ddd3f7c53', 'hex')
 }
 async function inputData (data) {
-    let query = `insert into data (userId, message, imagePath) values (${data.user},'${data.body.message}','${data.file.originalname}')`;
+    const hashMessage = encrypt(data.body.message)
+    let query = `insert into data (userId, message, imagePath) values (${data.user},'${hashMessage}','${data.file.originalname}')`;
     let result = await execute(query);
 
     if (result.affectedRows > 0) return true;
@@ -22,7 +24,8 @@ async function inputData (data) {
 }
 
 async function inputMessageData (data) {
-    let query = `insert into data (userId, message, imagePath) values (${data.user},'${data.body.message}','NULL')`;
+    const hashMessage = encrypt(data.body.message)
+    let query = `insert into data (userId, message, imagePath) values (${data.user},'${hashMessage}','NULL')`;
     let result = await execute(query);
 
     if (result.affectedRows > 0) return true;
